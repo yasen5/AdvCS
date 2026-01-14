@@ -89,13 +89,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
         }
         int comparisonResult = currNode.get().compareTo(elem);
         if (comparisonResult == 0) {
-            if (parent == null) {
-                root = null;
-                return;
-            }
             boolean leftExists = currNode.getLeft() != null;
             boolean rightExists = currNode.getRight() != null;
-            boolean lessThanParent = currNode.get().compareTo(parent.get()) < 0;
             Node<E> replacementNode = null;
             if (leftExists && !rightExists) {
                 replacementNode = currNode.getLeft();
@@ -117,10 +112,14 @@ public class BinarySearchTree<E extends Comparable<E>> {
                 lowestRight.setRight(currNode.getRight());
                 replacementNode = lowestRight;
             }
-            if (lessThanParent) {
-                parent.setLeft(replacementNode);
+            if (parent == null) {
+                root = replacementNode;
             } else {
-                parent.setRight(replacementNode);
+                if (currNode.get().compareTo(parent.get()) < 0) {
+                    parent.setLeft(replacementNode);
+                } else {
+                    parent.setRight(replacementNode);
+                }
             }
         } else if (comparisonResult < 0) {
             remove(elem, currNode.getRight(), currNode);
