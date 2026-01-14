@@ -96,55 +96,35 @@ public class BinarySearchTree<E extends Comparable<E>> {
             boolean leftExists = currNode.getLeft() != null;
             boolean rightExists = currNode.getRight() != null;
             boolean lessThanParent = currNode.get().compareTo(parent.get()) < 0;
-            if (!leftExists && !rightExists) {
-                if (lessThanParent) {
-                    parent.setLeft(null);
-                } else {
-                    parent.setRight(null);
-                }
-            }
-            else if (leftExists && !rightExists) {
-                if (lessThanParent) {
-                    parent.setLeft(currNode.getLeft());
-                }
-                else {
-                    parent.setRight(currNode.getLeft());
-                }
-            }
-            else if (!leftExists && rightExists) {
-                if (lessThanParent) {
-                    parent.setLeft(currNode.getRight());
-                }
-                else {
-                    parent.setRight(currNode.getRight());
-                }
-            }
-            else {
+            Node<E> replacementNode = null;
+            if (leftExists && !rightExists) {
+                replacementNode = currNode.getLeft();
+            } else if (!leftExists && rightExists) {
+                replacementNode = currNode.getRight();
+            } else if (leftExists && rightExists) {
                 Node<E> lowestRightParent = currNode;
                 Node<E> lowestRight = currNode.getRight();
                 while (lowestRight.getLeft() != null) {
                     lowestRightParent = lowestRight;
                     lowestRight = lowestRight.getLeft();
                 }
-                if (lessThanParent) {
-                    parent.setLeft(lowestRight);
-                }
-                else {
-                    parent.setRight(lowestRight);
-                }
                 if (lowestRightParent == currNode) {
                     lowestRightParent.setRight(null);
-                }
-                else {
+                } else {
                     lowestRightParent.setLeft(null);
                 }
                 lowestRight.setLeft(currNode.getLeft());
                 lowestRight.setRight(currNode.getRight());
+                replacementNode = lowestRight;
+            }
+            if (lessThanParent) {
+                parent.setLeft(replacementNode);
+            } else {
+                parent.setRight(replacementNode);
             }
         } else if (comparisonResult < 0) {
             remove(elem, currNode.getRight(), currNode);
-        }
-        else if (comparisonResult > 0) {
+        } else if (comparisonResult > 0) {
             remove(elem, currNode.getLeft(), currNode);
         }
     }
