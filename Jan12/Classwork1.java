@@ -10,30 +10,6 @@ public class Classwork1 {
         head.getLeft().setRight(new Node<Integer>(5));
         head.getRight().setLeft(new Node<Integer>(6));
         head.getRight().setRight(new Node<Integer>(7));
-        // int[] otherNodes = {2, 3, 4, 5, 6, 7};
-        // for (int node : otherNodes) {
-        // Node<Integer> currNode = head;
-        // while (true) {
-        // if (currNode.get() > node) {
-        // if (currNode.getLeft() == null) {
-        // currNode.setLeft(new Node<>(node));
-        // break;
-        // }
-        // else {
-        // currNode = currNode.getLeft();
-        // }
-        // }
-        // else {
-        // if (currNode.getRight() == null) {
-        // currNode.setRight(new Node<>(node));
-        // break;
-        // }
-        // else {
-        // currNode = currNode.getRight();
-        // }
-        // }
-        // }
-        // }
         printInOrder(head);
         System.out.println();
         printPreOrder(head);
