@@ -15,6 +15,7 @@ public class Runner extends JPanel implements ActionListener {
     private JButton containsButton;
     private JButton randomButton;
     private boolean containsResult = false;
+    private int level = -1;
 
     public Runner() {
         tree = new BinarySearchTree<>();
@@ -68,6 +69,8 @@ public class Runner extends JPanel implements ActionListener {
         if (containsResult) {
             g.drawString("Contained!", 50, 50);
         }
+        g.drawString("Height: " + tree.getHeight(), 400, 400);
+        g.drawString("Level: " + (tree.getHeight() + 1), 400, 400);
     }
 
     public void actionPerformed(ActionEvent e) {
