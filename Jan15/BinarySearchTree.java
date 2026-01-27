@@ -202,5 +202,23 @@ public class BinarySearchTree<E extends Comparable<E>> {
         }
     }
 
+    public int getHeight() {
+        return getHeight(root);
+    }
+
+    private int getHeight(Node<E> node) {
+        if (node == null) {
+            return -1;
+        }
+
+        int leftHeight = getHeight(node.getLeft());
+        int rightHeight = getHeight(node.getRight());
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    public int getLevel() {
+        return getHeight() + 1;
+    }
 
 }

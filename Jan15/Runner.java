@@ -13,6 +13,7 @@ public class Runner extends JPanel implements ActionListener {
     private JButton removeButton;
     private JButton clearButton;
     private JButton containsButton;
+    private JButton randomButton;
     private boolean containsResult = false;
 
     public Runner() {
@@ -49,12 +50,16 @@ public class Runner extends JPanel implements ActionListener {
         containsButton = new JButton("Contains");
         containsButton.addActionListener(this);
 
+        randomButton = new JButton("Add Random");
+        randomButton.addActionListener(this);
+
         this.add(new JLabel("Enter Value:"));
         this.add(input);
         this.add(addButton);
         this.add(removeButton);
         this.add(clearButton);
         this.add(containsButton);
+        this.add(randomButton);
     }
 
     public void paintComponent(Graphics g) {
@@ -78,6 +83,13 @@ public class Runner extends JPanel implements ActionListener {
             tree.clear();
         } else if (e.getSource() == containsButton) {
             containsResult = tree.contains(Integer.parseInt(input.getText()));
+        }
+        else if (e.getSource() == randomButton) {
+            tree.clear();
+            for (int i = 0; i < 15; i++) {
+                int value = (int)(Math.random() * 99) + 1;
+                tree.add(value);
+            }
         }
         repaint();
     }
