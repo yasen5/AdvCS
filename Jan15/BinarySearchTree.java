@@ -5,6 +5,7 @@ import java.awt.Color;
 
 public class BinarySearchTree<E extends Comparable<E>> {
     private Node<E> root;
+
     public BinarySearchTree() {
         root = null;
     }
@@ -125,7 +126,11 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
                 current.set(successor.get());
 
-                remove(successor.get(), successor, successorParent);
+                if (successorParent == current) {
+                    successorParent.setRight(null);
+                } else {
+                    successorParent.setLeft(null);
+                }
             }
 
             else {
@@ -172,7 +177,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
             }
         }
     }
-
 
     public void drawMe(Graphics g) {
         drawNode(g, root, 400, 60, 200);
@@ -221,4 +225,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return getHeight() + 1;
     }
 
+    public boolean isBalanced(Node<E> node) {
+        if ()
+    }
 }
