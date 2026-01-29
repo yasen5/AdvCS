@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import Jan15.BinarySearchTree;
 
 public class Runner extends JPanel implements ActionListener {
 
@@ -13,9 +12,7 @@ public class Runner extends JPanel implements ActionListener {
     private JButton addButton;
     private JButton removeButton;
     private JButton clearButton;
-    private JButton containsButton;
     private JButton randomButton;
-    private boolean containsResult = false;
 
     public Runner() {
         tree = new BinarySearchTree<>();
@@ -34,10 +31,7 @@ public class Runner extends JPanel implements ActionListener {
         clearButton = new JButton("Clear");
         clearButton.addActionListener(this);
 
-        containsButton = new JButton("Contains");
-        containsButton.addActionListener(this);
-
-        randomButton = new JButton("Add Random");
+        randomButton = new JButton("Rotate");
         randomButton.addActionListener(this);
 
         this.add(new JLabel("Enter Value:"));
@@ -45,16 +39,13 @@ public class Runner extends JPanel implements ActionListener {
         this.add(addButton);
         this.add(removeButton);
         this.add(clearButton);
-        this.add(containsButton);
         this.add(randomButton);
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         tree.drawMe(g);
-        if (containsResult) {
-            g.drawString("Contained!", 50, 50);
-        }
+        g.drawString("" + tree.isBalanced(), 50, 50);
         g.drawString("Height: " + tree.getHeight(), 400, 400);
         g.drawString("Level: " + (tree.getHeight() + 1), 400, 400);
     }
@@ -70,15 +61,8 @@ public class Runner extends JPanel implements ActionListener {
             input.setText("");
         } else if (e.getSource() == clearButton) {
             tree.clear();
-        } else if (e.getSource() == containsButton) {
-            containsResult = tree.contains(Integer.parseInt(input.getText()));
-        }
-        else if (e.getSource() == randomButton) {
-            tree.clear();
-            for (int i = 0; i < 15; i++) {
-                int value = (int)(Math.random() * 99) + 1;
-                tree.add(value);
-            }
+        } else if (e.getSource() == randomButton) {
+            tree.rotate();
         }
         repaint();
     }

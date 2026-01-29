@@ -1,7 +1,8 @@
-package Jan15;
+package Jan27;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import Jan15.Node;
 
 public class BinarySearchTree<E extends Comparable<E>> {
     private Node<E> root;
@@ -13,13 +14,12 @@ public class BinarySearchTree<E extends Comparable<E>> {
     public void add(E element) {
         if (root == null) {
             root = new Node<E>(element);
-        } 
-        
+        }
+
         else {
             add(element, root);
         }
     }
-
 
     private void add(E element, Node<E> node) {
         int comparisonResult = element.compareTo(node.get());
@@ -27,18 +27,17 @@ public class BinarySearchTree<E extends Comparable<E>> {
         if (comparisonResult < 0) {
             if (node.getLeft() == null) {
                 node.setLeft(new Node<>(element));
-            } 
+            }
 
             else {
                 add(element, node.getLeft());
             }
-        } 
+        }
 
         else if (comparisonResult > 0) {
             if (node.getRight() == null) {
                 node.setRight(new Node<>(element));
-            } 
-            else {
+            } else {
                 add(element, node.getRight());
             }
         }
@@ -83,8 +82,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
         if (comparisonResult == 0) {
             return true;
-        }
-        else if (comparisonResult > 0) {
+        } else if (comparisonResult > 0) {
             return contains(element, node.getRight());
         }
 
@@ -99,7 +97,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
     private void remove(E element, Node<E> current, Node<E> parent) {
         if (current == null) {
-            return; 
+            return;
         }
 
         int comparisonResult = element.compareTo(current.get());
@@ -138,18 +136,15 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
                 if (current.getLeft() != null) {
                     child = current.getLeft();
-                }
-                else {
+                } else {
                     child = current.getRight();
                 }
 
                 if (parent == null) {
                     root = child;
-                }
-                else if (parent.getLeft() == current) {
+                } else if (parent.getLeft() == current) {
                     parent.setLeft(child);
-                }
-                else {
+                } else {
                     parent.setRight(child);
                 }
             }
@@ -240,10 +235,30 @@ public class BinarySearchTree<E extends Comparable<E>> {
     }
 
     public void rotateLeft(Node<E> parent, Node<E> swinging) {
-        Node<E> temp = swinging.getRight().getLeft();
         Node<E> pivot = swinging.getRight();
+        Node<E> temp = pivot.getLeft();
         pivot.setLeft(swinging);
         swinging.setRight(temp);
-        parent.setRight(pivot);
+        if (parent == null) {
+            root = pivot;
+        } else {
+            parent.setRight(pivot);
+        }
+    }
+
+    public void rotateRight(Node<E> parent, Node<E> swinging) {
+        Node<E> pivot = swinging.getLeft();
+        Node<E> temp = pivot.getRight();
+        pivot.setRight(swinging);
+        swinging.setLeft(temp);
+        if (parent == null) {
+            root = pivot;
+        } else {
+            parent.setLeft(pivot);
+        }
+    }
+
+    public void rotate() {
+        rotateRight(null, root);
     }
 }
