@@ -242,7 +242,11 @@ public class BinarySearchTree<E extends Comparable<E>> {
         if (parent == null) {
             root = pivot;
         } else {
-            parent.setRight(pivot);
+            if (pivot.get().compareTo(parent.get()) > 0) {
+                parent.setRight(pivot);
+            } else {
+                parent.setLeft(pivot);
+            }
         }
     }
 
@@ -258,7 +262,35 @@ public class BinarySearchTree<E extends Comparable<E>> {
         }
     }
 
-    public void rotate() {
-        rotateRight(null, root);
+    public void balance() {
+        balance(root, null);
+    }
+
+    public void balance(Node<E> node, Node<E> parent) {
+        int heightDiff = getHeight(node.getLeft()) - getHeight(node.getRight());
+        if (Math.abs(heightDiff) < 2) {
+            return;
+        }
+        if (heightDiff > 0) { // left heavy
+            int lowerHeightDiff = getHeight(node.getLeft().getLeft()) - getHeight(node.getLeft().getRight());
+            if (lowerHeightDiff > 0) { // pure left
+                System.out.println("rotating right");
+                rotateRight(parent, node);
+            } else { // left right
+                System.out.println("rotating left right");
+                rotateLeft(node, node.getLeft());
+                rotateRight(parent, node);
+            }
+        } else {
+            int lowerHeightDiff = getHeight(node.getRight().getLeft()) - getHeight(node.getRight().getRight());
+            if (lowerHeightDiff < 0) { // pure right
+                System.out.println("rotating left");
+                rotateLeft(parent, node);
+            } else { // right left
+                System.out.println("rotating right left");
+                rotateRight(node, node.getRight());
+                rotateLeft(parent, node);
+            }
+        }
     }
 }

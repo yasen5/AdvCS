@@ -18,8 +18,8 @@ public class Runner extends JPanel implements ActionListener {
         tree = new BinarySearchTree<>();
 
         tree.add(3);
-        tree.add(2);
         tree.add(1);
+        tree.add(2);
 
         input = new JTextField(5);
         addButton = new JButton("Add");
@@ -62,7 +62,7 @@ public class Runner extends JPanel implements ActionListener {
         } else if (e.getSource() == clearButton) {
             tree.clear();
         } else if (e.getSource() == randomButton) {
-            tree.rotate();
+            tree.balance();
         }
         repaint();
     }
