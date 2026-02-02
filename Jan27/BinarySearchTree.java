@@ -271,6 +271,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         if (Math.abs(heightDiff) < 2) {
             return;
         }
+        Node<E> nextToBalance = null;
         if (heightDiff > 0) { // left heavy
             int lowerHeightDiff = getHeight(node.getLeft().getLeft()) - getHeight(node.getLeft().getRight());
             if (lowerHeightDiff > 0) { // pure left

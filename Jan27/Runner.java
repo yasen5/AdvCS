@@ -9,59 +9,50 @@ public class Runner extends JPanel implements ActionListener {
 
     private BinarySearchTree<Integer> tree;
     private JTextField input;
-    private JButton addButton;
-    private JButton removeButton;
-    private JButton clearButton;
-    private JButton randomButton;
+    private JButton loadScenarioButton;
+    private JButton balanceButton;
+    private final int[][] scenarios = new int[] {
+            new int[] { 3, 2, 1 },
+            new int[] { 1, 2, 3 },
+            new int[] { 1, 3, 2 },
+            new int[] { 4, 3, 2, 1, 5 },
+            new int[] { 2, 1, 6, 5, 8, 9 },
+            new int[] { 2, 1, 8, 6, 5, 9 },
+            new int[] { 2, 1, 8, 5, 6, 9 },
+            new int[] { 6, 2, 1, 5, 8, 9, 10 }
+    };
 
     public Runner() {
         tree = new BinarySearchTree<>();
 
-        tree.add(3);
-        tree.add(1);
-        tree.add(2);
-
         input = new JTextField(5);
-        addButton = new JButton("Add");
-        addButton.addActionListener(this);
-
-        removeButton = new JButton("Remove");
-        removeButton.addActionListener(this);
-
-        clearButton = new JButton("Clear");
-        clearButton.addActionListener(this);
-
-        randomButton = new JButton("Rotate");
-        randomButton.addActionListener(this);
+        loadScenarioButton = new JButton("Load Scenario");
+        balanceButton = new JButton("Rotate Scenario");
+        loadButton.addActionListener(this);
+        rotateButton.addActionListener(this);
 
         this.add(new JLabel("Enter Value:"));
         this.add(input);
         this.add(addButton);
-        this.add(removeButton);
-        this.add(clearButton);
-        this.add(randomButton);
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         tree.drawMe(g);
         g.drawString("" + tree.isBalanced(), 50, 50);
-        g.drawString("Height: " + tree.getHeight(), 400, 400);
+        g.drawString("Height: " + tree.getHeight(), 500, 400);
         g.drawString("Level: " + (tree.getHeight() + 1), 400, 400);
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == addButton) {
-            int value = Integer.parseInt(input.getText());
-            tree.add(value);
-            input.setText("");
-        } else if (e.getSource() == removeButton) {
-            int value = Integer.parseInt(input.getText());
-            tree.remove(value);
-            input.setText("");
-        } else if (e.getSource() == clearButton) {
+        if (e.getSource() == loadScenarioButton) {
+            int scenario = Integer.parseInt(input.getText());
             tree.clear();
-        } else if (e.getSource() == randomButton) {
+            for (int val : scenarios[scenario - 1]) {
+                tree.add(val);
+            }
+        } else if (e.getSource() == balanceButton) {
+            int scenario = Integer.parseInt(input.getText());
             tree.balance();
         }
         repaint();
