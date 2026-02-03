@@ -111,7 +111,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         }
 
         else {
-
             if (current.getLeft() != null && current.getRight() != null) {
 
                 Node<E> successor = current.getRight();
@@ -258,7 +257,11 @@ public class BinarySearchTree<E extends Comparable<E>> {
         if (parent == null) {
             root = pivot;
         } else {
-            parent.setLeft(pivot);
+            if (pivot.get().compareTo(parent.get()) > 0) {
+                parent.setRight(pivot);
+            } else {
+                parent.setLeft(pivot);
+            }
         }
     }
 
@@ -266,12 +269,17 @@ public class BinarySearchTree<E extends Comparable<E>> {
         balance(root, null);
     }
 
-    public void balance(Node<E> node, Node<E> parent) {
+    private void balance(Node<E> node, Node<E> parent) {
         int heightDiff = getHeight(node.getLeft()) - getHeight(node.getRight());
         if (Math.abs(heightDiff) < 2) {
+            if (!isBalanced(node.getLeft())) {
+                balance(node.getLeft(), node);
+            }
+            if (!isBalanced(node.getRight())) {
+                balance(node.getRight(), node);
+            }
             return;
         }
-        Node<E> nextToBalance = null;
         if (heightDiff > 0) { // left heavy
             int lowerHeightDiff = getHeight(node.getLeft().getLeft()) - getHeight(node.getLeft().getRight());
             if (lowerHeightDiff > 0) { // pure left

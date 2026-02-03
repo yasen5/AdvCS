@@ -11,7 +11,7 @@ public class Runner extends JPanel implements ActionListener {
     private JTextField input;
     private JButton loadScenarioButton;
     private JButton balanceButton;
-    private final int[][] scenarios = new int[] {
+    private final int[][] scenarios = new int[][] {
             new int[] { 3, 2, 1 },
             new int[] { 1, 2, 3 },
             new int[] { 1, 3, 2 },
@@ -28,12 +28,13 @@ public class Runner extends JPanel implements ActionListener {
         input = new JTextField(5);
         loadScenarioButton = new JButton("Load Scenario");
         balanceButton = new JButton("Rotate Scenario");
-        loadButton.addActionListener(this);
-        rotateButton.addActionListener(this);
+        loadScenarioButton.addActionListener(this);
+        balanceButton.addActionListener(this);
 
         this.add(new JLabel("Enter Value:"));
         this.add(input);
-        this.add(addButton);
+        this.add(loadScenarioButton);
+        this.add(balanceButton);
     }
 
     public void paintComponent(Graphics g) {
