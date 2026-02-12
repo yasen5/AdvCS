@@ -19,7 +19,8 @@ public class Runner extends JPanel implements ActionListener {
             new int[] { 2, 1, 6, 5, 8, 9 },
             new int[] { 2, 1, 8, 6, 5, 9 },
             new int[] { 2, 1, 8, 5, 6, 9 },
-            new int[] { 6, 2, 1, 5, 8, 9, 10 }
+            new int[] { 6, 2, 1, 5, 8, 9, 10 },
+            new int[] { 50, 20, 10, 5, 25, 80, 90, 100, 26, 17, 89, 34 }
     };
 
     public Runner() {
@@ -53,7 +54,6 @@ public class Runner extends JPanel implements ActionListener {
                 tree.add(val);
             }
         } else if (e.getSource() == balanceButton) {
-            int scenario = Integer.parseInt(input.getText());
             tree.balance();
         }
         repaint();

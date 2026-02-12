@@ -1,4 +1,4 @@
-package Jan27;
+package BinaryTreeLab;
 
 import java.awt.Graphics;
 import java.awt.Color;
@@ -6,6 +6,7 @@ import Jan15.Node;
 
 public class BinarySearchTree<E extends Comparable<E>> {
     private Node<E> root;
+    public int size = 0;
 
     public BinarySearchTree() {
         root = null;
@@ -14,11 +15,11 @@ public class BinarySearchTree<E extends Comparable<E>> {
     public void add(E element) {
         if (root == null) {
             root = new Node<E>(element);
-        }
-
-        else {
+        } else {
             add(element, root);
+            balance();
         }
+        size++;
     }
 
     private void add(E element, Node<E> node) {
@@ -27,14 +28,10 @@ public class BinarySearchTree<E extends Comparable<E>> {
         if (comparisonResult < 0) {
             if (node.getLeft() == null) {
                 node.setLeft(new Node<>(element));
-            }
-
-            else {
+            } else {
                 add(element, node.getLeft());
             }
-        }
-
-        else if (comparisonResult > 0) {
+        } else if (comparisonResult > 0) {
             if (node.getRight() == null) {
                 node.setRight(new Node<>(element));
             } else {
@@ -56,6 +53,21 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return inOrderString(node.getLeft()) + node.get() + " " + inOrderString(node.getRight());
     }
 
+    public MyDLList<E> inOrder() {
+        MyDLList<E> list = new MyDLList<>();
+        inOrder(root, list);
+        return list;
+    }
+
+    private void inOrder(Node<E> node, MyDLList<E> list) {
+        if (node == null) {
+            return;
+        }
+        inOrder(node.getLeft(), list);
+        list.add(node.get());
+        inOrder(node.getRight(), list);
+    }
+
     public String toStringPreOrder() {
         String string = toStringPreOrder(root);
         return string;
@@ -65,52 +77,64 @@ public class BinarySearchTree<E extends Comparable<E>> {
         if (node == null) {
             return "";
         }
-
         return node.get() + " " + toStringPreOrder(node.getLeft()) + toStringPreOrder(node.getRight());
     }
 
     public boolean contains(E element) {
-        return contains(element, root);
+        return contains(element, root) != null;
     }
 
-    private boolean contains(E element, Node<E> node) {
+    public int passes(E element) {
+        return passes(element, root, 0);
+    }
+
+    public int passes(E element, Node<E> node, int prevPasses) {
         if (node == null) {
-            return false;
+            return -1;
         }
-
         int comparisonResult = element.compareTo(node.get());
-
         if (comparisonResult == 0) {
-            return true;
+            return prevPasses + 1;
+        } else if (comparisonResult > 0) {
+            return passes(element, node.getRight(), prevPasses + 1);
+        } else {
+            return passes(element, node.getLeft(), prevPasses + 1);
+        }
+    }
+
+    public E get(E data) {
+        return contains(data, root).get();
+    }
+
+    private Node<E> contains(E element, Node<E> node) {
+        if (node == null) {
+            return null;
+        }
+        int comparisonResult = element.compareTo(node.get());
+        if (comparisonResult == 0) {
+            return node;
         } else if (comparisonResult > 0) {
             return contains(element, node.getRight());
-        }
-
-        else {
+        } else {
             return contains(element, node.getLeft());
         }
     }
 
     public void remove(E element) {
         remove(element, root, null);
+        balance();
     }
 
     private void remove(E element, Node<E> current, Node<E> parent) {
         if (current == null) {
             return;
         }
-
         int comparisonResult = element.compareTo(current.get());
-
         if (comparisonResult < 0) {
             remove(element, current.getLeft(), current);
-        }
-
-        else if (comparisonResult > 0) {
+        } else if (comparisonResult > 0) {
             remove(element, current.getRight(), current);
-        }
-
-        else {
+        } else {
             if (current.getLeft() != null && current.getRight() != null) {
 
                 Node<E> successor = current.getRight();
@@ -128,9 +152,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                 } else {
                     successorParent.setLeft(null);
                 }
-            }
-
-            else {
+            } else {
                 Node<E> child;
 
                 if (current.getLeft() != null) {
@@ -173,7 +195,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     }
 
     public void drawMe(Graphics g) {
-        drawNode(g, root, 400, 60, 200);
+        drawNode(g, root, 400, 100, 200);
     }
 
     private void drawNode(Graphics g, Node<E> node, int x, int y, int offset) {
@@ -266,6 +288,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     }
 
     public void balance() {
+        System.out.println("Balancing");
         balance(root, null);
     }
 
