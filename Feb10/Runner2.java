@@ -12,7 +12,8 @@ public class Runner2 {
 
         @Override
         public boolean equals(Object other) {
-            if (!(other instanceof Friend)) return false;
+            if (!(other instanceof Friend))
+                return false;
             Friend otherFriend = (Friend) other;
             return this.name.equals(otherFriend.name) || this.id == otherFriend.id;
         }
@@ -107,7 +108,8 @@ public class Runner2 {
                     char id = scanner.nextLine().toUpperCase().charAt(0);
                     Friend temp = new Friend(id, "");
                     System.out.println("Searching via DFS...");
-                    graph.DFS(A, temp);
+                    // graph.DFS(A, temp);
+                    graph.DFSDumb(A, temp);
                 }
 
                 case 4 -> {
@@ -115,7 +117,7 @@ public class Runner2 {
                     String name = scanner.nextLine();
                     Friend temp = new Friend('x', name);
                     System.out.println("Searching via DFS...");
-                    graph.DFS(A, temp);
+                    graph.DFSDumb(A, temp);
                 }
 
                 case 5 -> {

@@ -85,6 +85,9 @@ public class Runner extends JPanel implements ActionListener {
             g.drawString("Passes: " + passes, 50, 50);
             g.drawString("Search: " + searchListing.fullListing(), 50, 75);
         }
+        g.drawString("Ex input for tree add: Books 5", 0, 50);
+        g.drawString("Ex input for tree remove (match case): Books", 0, 80);
+        g.drawString("Ex input for cart add (name & quantity): Books 3", 0, 110);
     }
 
     public void actionPerformed(ActionEvent e) {

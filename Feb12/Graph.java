@@ -1,20 +1,18 @@
-package Feb10;
+package Feb12;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
 public class Graph<E> {
-    private HashMap<E, HashSet<E>> graph;
+    private MyHashMap<E, MyHashSet<E>> graph;
 
     public Graph() {
-        this.graph = new HashMap<>();
+        this.graph = new MyHashMap<>();
     }
 
     public void add(E data) {
-        graph.put(data, new HashSet<E>());
+        graph.put(data, new MyHashSet<E>());
     }
 
     public void makeEdge(E node1, E node2) {
@@ -23,7 +21,7 @@ public class Graph<E> {
     }
 
     public void remove(E data) {
-        for (E node : graph.keySet()) {
+        for (E node : graph.keySet().toDLList()) {
             graph.get(node).remove(data);
         }
         graph.remove(data);
@@ -32,9 +30,9 @@ public class Graph<E> {
     @Override
     public String toString() {
         String out = "";
-        for (E node : graph.keySet()) {
+        for (E node : graph.keySet().toDLList()) {
             out += node + " ->";
-            for (E connection : graph.get(node)) {
+            for (E connection : graph.get(node).toDLList()) {
                 out += " " + connection.toString();
             }
             out += "\n";
@@ -42,8 +40,8 @@ public class Graph<E> {
         return out;
     }
 
-    public void BFS(E start, E searchValue) {
-        HashSet<E> visited = new HashSet<>();
+    public E BFS(E start, E searchValue) {
+        MyHashSet<E> visited = new MyHashSet<>();
         Queue<E> toVisit = new LinkedList<>();
         toVisit.add(start);
         while (!toVisit.isEmpty()) {
@@ -51,19 +49,19 @@ public class Graph<E> {
             if (visited.contains(top)) {
                 continue;
             }
-            System.out.println(top);
             if (top.equals(searchValue)) {
-                break;
+                return top;
             }
             visited.add(top);
-            for (E nodeToVisit : graph.get(top)) {
+            for (E nodeToVisit : graph.get(top).toDLList()) {
                 toVisit.add(nodeToVisit);
             }
         }
+        return null;
     }
 
     public void DFS(E start, E searchValue) {
-        HashSet<E> visited = new HashSet<>();
+        MyHashSet<E> visited = new MyHashSet<>();
         Stack<E> toVisit = new Stack<>();
         toVisit.add(start);
         while (!toVisit.isEmpty()) {
@@ -71,30 +69,28 @@ public class Graph<E> {
             if (visited.contains(top)) {
                 continue;
             }
-            System.out.println(top);
             if (top.equals(searchValue)) {
                 break;
             }
             visited.add(top);
-            for (E nodeToVisit : graph.get(top)) {
+            for (E nodeToVisit : graph.get(top).toDLList()) {
                 toVisit.add(nodeToVisit);
             }
         }
     }
 
     public void DFSDumb(E start, E searchValue) {
-        HashSet<E> visited = new HashSet<E>();
+        MyHashSet<E> visited = new MyHashSet<E>();
         DumbFS(start, searchValue, visited);
     }
 
-    private boolean DumbFS(E current, E searchValue, HashSet<E> visited) {
+    private boolean DumbFS(E current, E searchValue, MyHashSet<E> visited) {
         visited.add(current);
-        System.out.println("Visiting " + current);
         if (current.equals(searchValue)) {
             return true;
         }
         var toVisit = graph.get(current);
-        for (E node : toVisit) {
+        for (E node : toVisit.toDLList()) {
             if (visited.contains(node)) {
                 continue;
             }
@@ -103,5 +99,17 @@ public class Graph<E> {
             }
         }
         return false;
+    }
+
+    public E getMatching(E searchMatch) {
+        return graph.keySet().get(searchMatch.hashCode());
+    }
+
+    public MyHashSet<E> getConnections(E element) {
+        return graph.get(element);
+    }
+
+    public MyDLList<E> getNodes() {
+        return graph.keySet().toDLList();
     }
 }

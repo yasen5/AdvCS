@@ -47,7 +47,7 @@ public class Runner {
 
         String name = scanner.next();
 
-        graph.BFS(john, new Friend('x', name));
+        graph.BFS(john, new Friend('P', name));
 
         scanner.close();
     }
