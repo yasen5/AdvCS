@@ -46,7 +46,7 @@ public class Runner extends JPanel implements ActionListener {
         searchButton = new JButton("search");
         searchButton.addActionListener(this);
 
-        this.add(new JLabel("Enter Value:"));
+        this.add(new JLabel("Input:"));
         this.add(input);
         this.add(addButton);
         this.add(removeButton);

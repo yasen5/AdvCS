@@ -1,6 +1,8 @@
 package Feb26;
 
 import java.util.Scanner;
+
+import Feb12.MyDLList;
 import Feb24.Graph;
 
 public class Runner {
@@ -33,7 +35,7 @@ public class Runner {
             System.out.println("1. View Graph");
             System.out.println("2. Add New Node");
             System.out.println("3. Add Edge given 2 Nodes and a Weight");
-            System.out.println("4. Get Weight given 2 adjacent Nodes");
+            System.out.println("4. Shortest path");
             System.out.println("5. Quit");
 
             int choice = sc.nextInt();
@@ -63,11 +65,14 @@ public class Runner {
 
                 case 4:
                     System.out.print("Enter first node: ");
-                    Character adjNode1 = sc.next().charAt(0);
+                    Character start = sc.next().charAt(0);
                     System.out.print("Enter second node: ");
-                    Character adjNode2 = sc.next().charAt(0);
+                    Character end = sc.next().charAt(0);
 
-                    System.out.println("Weight: " + graph.getWeight(adjNode1, adjNode2));
+                    MyDLList<Character> shortestPath = graph.shortestPath(start, end);
+                    for (Character character : shortestPath) {
+                        System.out.println(character + ", ");
+                    }
                     break;
 
                 case 5:

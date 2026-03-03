@@ -1,8 +1,5 @@
 package Feb24;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 import Feb12.MyDLList;
 import Feb12.MyHashMap;
 import Feb12.MyHashSet;
@@ -70,6 +67,7 @@ public class Graph<E> {
     public MyDLList<E> shortestPath(E start, E end) {
         MyHashMap<E, NodeProperties<E>> table = new MyHashMap<>();
         MinHeap<WeightedLink<E>> toVisit = new MinHeap<>();
+        table.put(start, new NodeProperties<E>(0, null));
         toVisit.insert(new WeightedLink<E>(start, 0));
         while (toVisit.size() != 0) {
             E visiting = toVisit.pop().connectedNode;
@@ -77,7 +75,8 @@ public class Graph<E> {
                 MyDLList<E> shortestPath = new MyDLList<>();
                 shortestPath.add(visiting);
                 NodeProperties<E> currNode = table.get(visiting);
-                while (currNode != null) {
+                System.out.println("Total distance: " + currNode.lowestCost);
+                while (currNode.previousNode != null) {
                     shortestPath.add(currNode.previousNode);
                     currNode = table.get(currNode.previousNode);
                 }
@@ -88,6 +87,7 @@ public class Graph<E> {
                 NodeProperties<E> node = table.get(link.connectedNode);
                 if (node == null || node.lowestCost > cost) {
                     table.put(link.connectedNode, new NodeProperties<E>(cost, visiting));
+                    toVisit.insert(link);
                 }
             }
         }
