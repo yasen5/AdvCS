@@ -108,11 +108,11 @@ public class MyDLList<E> implements Iterable<E>, Serializable {
     }
 
     private class MyDLListIterator implements Iterator<E> {
-        private DLNode<E> current = (readReversed ? tail : head).getNext();
+        private DLNode<E> current = readReversed ? tail.getPrev() : head.getNext();
 
         @Override
         public boolean hasNext() {
-            return current != tail;
+            return readReversed ? current != head : current != tail;
         }
 
         @Override

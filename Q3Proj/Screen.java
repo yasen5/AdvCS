@@ -57,7 +57,7 @@ public class Screen extends JPanel implements MouseListener {
                 + (id.charAt(2) - 'A');
     }
 
-    public Traveler traveler = new Traveler(this);
+    public Traveler traveler = new Traveler(this, locationMap);
 
     public Screen() {
         setFocusable(true);
@@ -65,7 +65,7 @@ public class Screen extends JPanel implements MouseListener {
         for (Location loc : locations) {
             locationMap.add(loc);
         }
-        locationMap.makeEdge(charIdHash("KNS"), charIdHash("KNE")); 
+        locationMap.makeEdge(charIdHash("KNS"), charIdHash("KNE"));
         locationMap.makeEdge(charIdHash("KNE"), charIdHash("FEW"));
         locationMap.makeEdge(charIdHash("KNE"), charIdHash("WEE")); // 1
         locationMap.makeEdge(charIdHash("FEW"), charIdHash("FTR"));
@@ -127,15 +127,8 @@ public class Screen extends JPanel implements MouseListener {
             prevLocation = location;
         }
         g.setColor(Color.BLACK);
-        if (traveler.lastPath != null) {
-            Location prevLoc = null;
-            traveler.lastPath.readReversed(true);
-            int y = 0;
-            for (Location loc : traveler.lastPath) {
-                if (prevLoc != null) {
-                    g.drawString("From " + prevLoc.name + " " + )
-                }
-            }
+        if (traveler.directions != null) {
+            g.drawString(traveler.directions, 0, 0);
         }
     }
 

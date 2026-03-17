@@ -6,25 +6,29 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import util.MyDLList;
+import util.Graph;
+import util.LocationInterface;
 import util.Graph.WeightedLink;
 
 public class Traveler implements Runnable {
     public MyDLList<Location> targetLocations = new MyDLList<>();
     public Location lastTarget;
-    public MyDLList<WeightedLink<Location>> lastPath = null;
+    public String directions;
     public int x, y;
     public final int SPEED = Screen.IMAGE_WIDTH / 200;
     private int animState = 0;
     private BufferedImage[] animation;
     private final int WIDTH = 20, HEIGHT = 20;
     private final Screen screen;
+    private final Graph<Location> locationMap;
 
-    public Traveler(Screen screen) {
+    public Traveler(Screen screen, Graph<Location> locationmap) {
         this.x = 0;
         this.y = 0;
         this.screen = screen;
         targetLocations.add(Screen.locations[0]);
         lastTarget = targetLocations.get(0);
+        this.locationMap = locationmap;
         try {
             animation = new BufferedImage[] {
                     ImageIO.read(new File("anim1.png")),
@@ -68,10 +72,13 @@ public class Traveler implements Runnable {
 
     public void setTargetLocations(MyDLList<Location> path) {
         path.readReversed(true);
+        Location lastPoint = null;
         for (Location loc : path) {
-            lastPath.add()
+            if (lastPoint != null) {
+                directions += "From " + loc.name + " to " + lastPoint.name + " - " + locationMap.getWeight(loc, lastPoint) + " px\n";
+            }
         }
-        targetLocations = locs;
+        targetLocations = path;
         lastTarget = targetLocations.get(0);
     }
 }
