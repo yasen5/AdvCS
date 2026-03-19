@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -27,7 +28,8 @@ public class Screen extends JPanel implements MouseListener {
             System.out.println("Failed to load park map");
         }
     }
-    private JTextField input;
+    private JTextField startInput;
+    private JTextField endInput;
     public static final Location[] locations = {
             new Location("KNS", "Koen Nishi Station", 0.036, 0.343),
             new Location("KNE", "Koen Nishi Station Entrance", 0.098, 0.298),
@@ -84,16 +86,22 @@ public class Screen extends JPanel implements MouseListener {
         locationMap.makeEdge(charIdHash("TOT"), charIdHash("FOR")); // 7
         locationMap.makeEdge(charIdHash("FOR"), charIdHash("BBD"));
         locationMap.makeEdge(charIdHash("FOR"), charIdHash("MOT")); // 8
-        input = new JTextField(3);
-        input.addActionListener((e) -> {
-            Location targetLocation = locationMap.getFullEntry(charIdHash(input.getText()));
-            if (targetLocation != null) {
-                MyDLList<Location> shortestPath = locationMap.shortestPath(traveler.lastTarget,
+        locationMap.makeEdge(charIdHash("WEE"), charIdHash("DUP")); // 8
+        locationMap.makeEdge(charIdHash("WEE"), charIdHash("BBD")); // 8
+        locationMap.makeEdge(charIdHash("FLC"), charIdHash("MPL")); // 8
+        startInput = new JTextField("Enter the starting location");
+        endInput = new JTextField("Enter the ending location");
+        endInput.addActionListener((e) -> {
+            Location startLocation = locationMap.getFullEntry(charIdHash(startInput.getText()));
+            Location targetLocation = locationMap.getFullEntry(charIdHash(endInput.getText()));
+            if (startLocation != null && targetLocation != null) {
+                MyDLList<Location> shortestPath = locationMap.shortestPath(startLocation,
                         targetLocation);
                 traveler.setTargetLocations(shortestPath);
             }
         });
-        this.add(input);
+        this.add(startInput);
+        this.add(endInput);
         new Thread(traveler).start();
     }
 
@@ -126,9 +134,16 @@ public class Screen extends JPanel implements MouseListener {
             }
             prevLocation = location;
         }
-        g.setColor(Color.BLACK);
         if (traveler.directions != null) {
-            g.drawString(traveler.directions, 0, 0);
+            g.setFont(new Font("SansSerif", Font.BOLD, 12));
+            g.setColor(Color.BLACK);
+            int x = 10;
+            int y = 10;
+            FontMetrics metrics = g.getFontMetrics();
+            for (String line : traveler.directions.split("\n")) {
+                g.drawString(line, x, y);
+                y += metrics.getHeight() * 1.5;
+            }
         }
     }
 

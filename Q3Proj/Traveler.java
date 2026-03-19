@@ -7,12 +7,9 @@ import javax.imageio.ImageIO;
 
 import util.MyDLList;
 import util.Graph;
-import util.LocationInterface;
-import util.Graph.WeightedLink;
 
 public class Traveler implements Runnable {
     public MyDLList<Location> targetLocations = new MyDLList<>();
-    public Location lastTarget;
     public String directions;
     public int x, y;
     public final int SPEED = Screen.IMAGE_WIDTH / 200;
@@ -21,13 +18,13 @@ public class Traveler implements Runnable {
     private final int WIDTH = 20, HEIGHT = 20;
     private final Screen screen;
     private final Graph<Location> locationMap;
+    private final Object lock = new Object();
 
     public Traveler(Screen screen, Graph<Location> locationmap) {
         this.x = 0;
         this.y = 0;
         this.screen = screen;
         targetLocations.add(Screen.locations[0]);
-        lastTarget = targetLocations.get(0);
         this.locationMap = locationmap;
         try {
             animation = new BufferedImage[] {
@@ -53,15 +50,17 @@ public class Traveler implements Runnable {
             if (targetLocations.size() == 0) {
                 continue;
             }
-            int xDiff = targetLocations.last().x - x;
-            int yDiff = targetLocations.last().y - y;
-            if (Math.abs(xDiff) < SPEED && Math.abs(yDiff) < SPEED) {
-                targetLocations.remove(targetLocations.size() - 1);
+            synchronized (lock) {
+                int xDiff = targetLocations.last().x - x;
+                int yDiff = targetLocations.last().y - y;
+                if (Math.abs(xDiff) < SPEED && Math.abs(yDiff) < SPEED) {
+                    targetLocations.remove(targetLocations.size() - 1);
+                }
+                double angle = Math.atan2(yDiff, xDiff);
+                animState = (animState + 1) % animation.length;
+                x += (int) (Math.cos(angle) * SPEED);
+                y += (int) (Math.sin(angle) * SPEED);
             }
-            double angle = Math.atan2(yDiff, xDiff);
-            animState = (animState + 1) % animation.length;
-            x += (int) (Math.cos(angle) * SPEED);
-            y += (int) (Math.sin(angle) * SPEED);
             screen.repaint();
         }
     }
@@ -71,14 +70,24 @@ public class Traveler implements Runnable {
     }
 
     public void setTargetLocations(MyDLList<Location> path) {
+        directions = "";
         path.readReversed(true);
         Location lastPoint = null;
+        double totalDistance = 0;
         for (Location loc : path) {
-            if (lastPoint != null) {
-                directions += "From " + loc.name + " to " + lastPoint.name + " - " + locationMap.getWeight(loc, lastPoint) + " px\n";
+            if (lastPoint == null) {
+                synchronized (lock) {
+                    x = loc.x;
+                    y = loc.y;
+                }
+            } else {
+                directions += "From " + lastPoint.name + " to " + loc.name + " - "
+                        + (int) (locationMap.getWeight(loc, lastPoint)) + " feet\n";
+                totalDistance += locationMap.getWeight(loc, lastPoint);
             }
+            lastPoint = loc;
         }
+        directions += "Total Distance: " + (int) (totalDistance) + " feet";
         targetLocations = path;
-        lastTarget = targetLocations.get(0);
     }
 }

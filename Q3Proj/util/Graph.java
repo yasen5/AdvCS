@@ -2,7 +2,9 @@ package util;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Graph<E extends LocationInterface> {
     public record WeightedLink<E>(E connectedNode, double weight) implements Comparable<WeightedLink<E>> {
@@ -119,7 +121,7 @@ public class Graph<E extends LocationInterface> {
         MyHashSet<E> visited = new MyHashSet<>();
         MinHeap<WeightedLink<E>> toVisit = new MinHeap<>();
         toVisit.insert(new WeightedLink<E>(startNode, 0));
-        g.setColor(Color.RED);
+        g.setFont(new Font("SansSerif", Font.PLAIN, 15));
         while (toVisit.size() != 0) {
             E top = toVisit.pop().connectedNode;
             visited.add(top);
@@ -127,10 +129,10 @@ public class Graph<E extends LocationInterface> {
                 if (visited.contains(nodeToVisit.connectedNode)) {
                     continue;
                 }
+                g.setColor(Color.RED);
                 g.drawLine(top.x(), top.y(), nodeToVisit.connectedNode.x(),
                         nodeToVisit.connectedNode.y());
-                g.setFont(new Font("SansSerif", Font.PLAIN, 15));
-                g.drawString(String.valueOf((int) nodeToVisit.weight()),
+                drawTextWithBackground(g, String.valueOf((int) nodeToVisit.weight()),
                         (top.x() + nodeToVisit.connectedNode().x()) / 2,
                         (top.y() + nodeToVisit.connectedNode().y()) / 2);
                 toVisit.insert(nodeToVisit);
@@ -223,4 +225,19 @@ public class Graph<E extends LocationInterface> {
     // public MyDLList<E> getNodes() {
     // return graph.keySet().toDLList();
     // }
+
+    public static void drawTextWithBackground(Graphics g, String str, int centerX, int centerY) {
+        FontMetrics metrics = g.getFontMetrics();
+        int y = centerY;
+        String[] splitLines = str.split("\n");
+        int totalHeight = splitLines.length * metrics.getHeight();
+        for (String line : splitLines) {
+            int width = metrics.stringWidth(line);
+            g.setColor(Color.WHITE);
+            g.fillRect(centerX - width / 2, y - totalHeight * 2 / 3, width, totalHeight);
+            g.setColor(Color.BLACK);
+            g.drawString(line, centerX - width / 2, y);
+            y += metrics.getHeight() * 1.5;
+        }
+    }
 }
